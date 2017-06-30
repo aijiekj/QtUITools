@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>FQtCustomUIAppClass</class>
+ <widget class="QMainWindow" name="FQtCustomUIAppClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>943</width>
+    <height>663</height>
+   </rect>
+  </property>
+  <property name="contextMenuPolicy">
+   <enum>Qt::NoContextMenu</enum>
+  </property>
+  <property name="windowTitle">
+   <string>Qt自定义控件</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="FQtCustomUIApp.qrc">
+    <normaloff>:/FQtCustomUIApp/images/FanIcon.png</normaloff>:/FQtCustomUIApp/images/FanIcon.png</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="styleSheet">
+       <string notr="true">QTabBar::close-button {	
+	image: url(:/FQtCustomUIApp/images/close_48px.png);
+    subcontrol-position: right;
+}
+QTabBar::close-button:hover {    
+	image: url(:/FQtCustomUIApp/images/clear_48px.png);
+}</string>
+      </property>
+      <property name="tabShape">
+       <enum>QTabWidget::Rounded</enum>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <property name="tabsClosable">
+       <bool>true</bool>
+      </property>
+      <property name="movable">
+       <bool>true</bool>
+      </property>
+      <property name="tabBarAutoHide">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Tab 1</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="tab_2">
+       <attribute name="title">
+        <string>Tab 2</string>
+       </attribute>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>943</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_F">
+    <property name="title">
+     <string>文件(&amp;F)</string>
+    </property>
+    <widget class="QMenu" name="menuOpenHistoryFile">
+     <property name="title">
+      <string>最近打开文件</string>
+     </property>
+     <addaction name="separator"/>
+     <addaction name="actionClear_All_History"/>
+    </widget>
+    <addaction name="actionOpen_O"/>
+    <addaction name="menuOpenHistoryFile"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave_S"/>
+    <addaction name="actionSaveAs"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit_E"/>
+   </widget>
+   <widget class="QMenu" name="menu_R">
+    <property name="title">
+     <string>执行(&amp;R)</string>
+    </property>
+    <addaction name="actionPreView"/>
+    <addaction name="separator"/>
+    <addaction name="actionQt_Widget"/>
+    <addaction name="actionQt_Dialog"/>
+   </widget>
+   <widget class="QMenu" name="menu_E">
+    <property name="title">
+     <string>编辑(&amp;E)</string>
+    </property>
+    <addaction name="actionUnDo"/>
+    <addaction name="actionReDo"/>
+    <addaction name="separator"/>
+    <addaction name="actionSelect_All"/>
+    <addaction name="separator"/>
+    <addaction name="CutAct"/>
+    <addaction name="CopyAct"/>
+    <addaction name="PaseAct"/>
+    <addaction name="separator"/>
+    <addaction name="FindSourceAct"/>
+    <addaction name="ReplaceSourceAct"/>
+   </widget>
+   <addaction name="menu_F"/>
+   <addaction name="menu_E"/>
+   <addaction name="menu_R"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <property name="contextMenuPolicy">
+    <enum>Qt::NoContextMenu</enum>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionOpen_O"/>
+   <addaction name="actionSave_S"/>
+   <addaction name="separator"/>
+   <addaction name="FindSourceAct"/>
+   <addaction name="ReplaceSourceAct"/>
+   <addaction name="separator"/>
+   <addaction name="actionUnDo"/>
+   <addaction name="actionReDo"/>
+   <addaction name="separator"/>
+   <addaction name="actionPreView"/>
+   <addaction name="actionQt_Widget"/>
+   <addaction name="actionQt_Dialog"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionOpen_O">
+   <property name="icon">
+    <iconset resource="FQtCustomUIApp.qrc">
+     <normaloff>:/FQtCustomUIApp/images/folder_open_48px.png</normaloff>:/FQtCustomUIApp/images/folder_open_48px.png</iconset>
+   </property>
+   <property name="text">
+    <string>打开(&amp;O)...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionExit_E">
+   <property name="text">
+    <string>退出(&amp;Q)</string>
+   </property>
+   <property name="toolTip">
+    <string>退出</string>
+   </property>
+  </action>
+  <action name="actionPreView">
+   <property name="icon">
+    <iconset resource="FQtCustomUIApp.qrc">
+     <normaloff>:/FQtCustomUIApp/images/Run.png</normaloff>:/FQtCustomUIApp/images/Run.png</iconset>
+   </property>
+   <property name="text">
+    <string>预览</string>
+   </property>
+   <property name="toolTip">
+    <string>预览</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actionQt_Widget">
+   <property name="icon">
+    <iconset resource="FQtCustomUIApp.qrc">
+     <normaloff>:/FQtCustomUIApp/images/Run-QtWgt.png</normaloff>:/FQtCustomUIApp/images/Run-QtWgt.png</iconset>
+   </property>
+   <property name="text">
+    <string>Qt Widget</string>
+   </property>
+  </action>
+  <action name="actionQt_Dialog">
+   <property name="icon">
+    <iconset resource="FQtCustomUIApp.qrc">
+     <normaloff>:/FQtCustomUIApp/images/Run-QtDlg.png</normaloff>:/FQtCustomUIApp/images/Run-QtDlg.png</iconset>
+   </property>
+   <property name="text">
+    <string>Qt Dialog</string>
+   </property>
+  </action>
+  <action name="FindSourceAct">
+   <property name="icon">
+    <iconset resource="FQtCustomUIApp.qrc">
+     <normaloff>:/FQtCustomUIApp/images/find_in_page_48px.png</normaloff>:/FQtCustomUIApp/images/find_in_page_48px.png</iconset>
+   </property>
+   <property name="text">
+    <string>查询(&amp;F)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
+   </property>
+  </action>
+  <action name="actionSelect_All">
+   <property name="text">
+    <string>全选(&amp;A)</string>
+   </property>
+   <property name="toolTip">
+    <string>全选</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
+  </action>
+  <action name="CopyAct">
+   <property name="icon">
+    <iconset resource="FQtCustomUIApp.qrc">
+     <normaloff>:/FQtCustomUIApp/images/content_copy_48px.png</normaloff>:/FQtCustomUIApp/images/content_copy_48px.png</iconset>
+   </property>
+   <property name="text">
+    <string>复制(&amp;C)</string>
+   </property>
+   <property name="toolTip">
+    <string>复制</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="PaseAct">
+   <property name="icon">
+    <iconset resource="FQtCustomUIApp.qrc">
+     <normaloff>:/FQtCustomUIApp/images/content_paste_48px.png</normaloff>:/FQtCustomUIApp/images/content_paste_48px.png</iconset>
+   </property>
+   <property name="text">
+    <string>粘贴(&amp;V)</string>
+   </property>
+   <property name="toolTip">
+    <string>粘贴</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
+   </property>
+  </action>
+  <action name="ReplaceSourceAct">
+   <property name="icon">
+    <iconset resource="FQtCustomUIApp.qrc">
+     <normaloff>:/FQtCustomUIApp/images/find_replace_48px.png</normaloff>:/FQtCustomUIApp/images/find_replace_48px.png</iconset>
+   </property>
+   <property name="text">
+    <string>替换(&amp;H)</string>
+   </property>
+   <property name="toolTip">
+    <string>替换</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+H</string>
+   </property>
+  </action>
+  <action name="actionUnDo">
+   <property name="icon">
+    <iconset resource="FQtCustomUIApp.qrc">
+     <normaloff>:/FQtCustomUIApp/images/undo_48px.png</normaloff>:/FQtCustomUIApp/images/undo_48px.png</iconset>
+   </property>
+   <property name="text">
+    <string>撤消(&amp;Z)</string>
+   </property>
+   <property name="toolTip">
+    <string>撤消</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="actionReDo">
+   <property name="icon">
+    <iconset resource="FQtCustomUIApp.qrc">
+     <normaloff>:/FQtCustomUIApp/images/redo_48px.png</normaloff>:/FQtCustomUIApp/images/redo_48px.png</iconset>
+   </property>
+   <property name="text">
+    <string>恢复(&amp;Y)</string>
+   </property>
+   <property name="toolTip">
+    <string>恢复</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Y</string>
+   </property>
+  </action>
+  <action name="CutAct">
+   <property name="icon">
+    <iconset resource="FQtCustomUIApp.qrc">
+     <normaloff>:/FQtCustomUIApp/images/content_cut_48px.png</normaloff>:/FQtCustomUIApp/images/content_cut_48px.png</iconset>
+   </property>
+   <property name="text">
+    <string>剪切(&amp;X)</string>
+   </property>
+   <property name="toolTip">
+    <string>剪切</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="actionSave_S">
+   <property name="icon">
+    <iconset resource="FQtCustomUIApp.qrc">
+     <normaloff>:/FQtCustomUIApp/images/save_48px.png</normaloff>:/FQtCustomUIApp/images/save_48px.png</iconset>
+   </property>
+   <property name="text">
+    <string>保存(&amp;S)</string>
+   </property>
+   <property name="toolTip">
+    <string>保存</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionSaveAs">
+   <property name="text">
+    <string>另存为</string>
+   </property>
+   <property name="toolTip">
+    <string>另存为</string>
+   </property>
+  </action>
+  <action name="actionClear_All_History">
+   <property name="text">
+    <string>清空列表</string>
+   </property>
+   <property name="toolTip">
+    <string>清空列表</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="FQtCustomUIApp.qrc"/>
+ </resources>
+ <connections/>
+</ui>
