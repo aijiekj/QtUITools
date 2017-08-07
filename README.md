@@ -1,6 +1,14 @@
 # QtUITools
 使用QtUI文件动态创建控件
 
+2017-08-07 合并规整原有代码内容
+
+1、把原有的代码内容VisQtUiTool和VisPublicControlsUI里内容都整合到FQtUiTool项目中，
+移除目前不需要的代码内容
+2、调整类的命名以F替换CVis或者Vis
+3、给窗口添加移动功能
+
+
 2017-06-26 初始化代码
 
 Qt版本：5.7
