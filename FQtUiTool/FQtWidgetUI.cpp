@@ -1,4 +1,4 @@
-#include "CVisQtWidgetUI.h"
+#include "FQtWidgetUI.h"
 #include <QVBoxLayout>
 #include <QTextEdit>
 #include <QComboBox>
@@ -35,29 +35,35 @@
 #include <QStackedWidget>
 #include <QScrollArea>
 #include <QCalendarWidget> 
+#include <QMouseEvent>
 
-#include "VisQtUiTool.h"
+#include "FQtUiTool.h"
 #include <QDebug>
 
-CVisQtWidgetUI::CVisQtWidgetUI(QWidget *parent)
+FQtWidgetUI::FQtWidgetUI(QWidget *parent)
 	: QWidget(parent)
 {
 	m_pUI = nullptr;
 	m_pBusObj = nullptr;
 
+	m_bMove = false;				
+	m_bCurFrameMoveState = false;	
+	m_nTopHight = 30;				
+	m_bCurFrameType = false;
+
 	setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinimizeButtonHint);
 	setAttribute(Qt::WA_TranslucentBackground, true); 
 }
 
-CVisQtWidgetUI::~CVisQtWidgetUI()
+FQtWidgetUI::~FQtWidgetUI()
 {
 
 }
 
 //初始化界面UI
-bool CVisQtWidgetUI::InitUIForFullPath(const QString &sUIFile)
+bool FQtWidgetUI::InitUIForFullPath(const QString &sUIFile)
 {
-	m_pUI = VisQtUiTool::CreateUIForPath(sUIFile, m_lCustomUI, this);
+	m_pUI = FQtUiTool::CreateUIForPath(sUIFile, m_lCustomUI, this);
 	if(m_pUI == nullptr) return false;
 
 	qDebug() << "Custom UI List" << m_lCustomUI;
@@ -75,9 +81,9 @@ bool CVisQtWidgetUI::InitUIForFullPath(const QString &sUIFile)
 	return true;
 }
 
-bool CVisQtWidgetUI::InitPolicyFileUI(const QString &sUIFile)
+bool FQtWidgetUI::InitPolicyFileUI(const QString &sUIFile)
 {
-	m_pUI = VisQtUiTool::CreateUI(sUIFile, m_lCustomUI, this);
+	m_pUI = FQtUiTool::CreateUI(sUIFile, m_lCustomUI, this);
 	if(m_pUI == nullptr) return false;
 
 	InitItemUIInfo(m_pUI);
@@ -93,8 +99,10 @@ bool CVisQtWidgetUI::InitPolicyFileUI(const QString &sUIFile)
 }
 
 //初始化ItemUI基础控件
-void CVisQtWidgetUI::InitItemUIInfo(QWidget * pItemUI)
+void FQtWidgetUI::InitItemUIInfo(QWidget * pItemUI)
 {
+	InitUIBaseInfo(pItemUI);
+
 	InitOperBtnSignal(pItemUI);			//初始化Btn
 	InitComboBoxInfo(pItemUI);				//初始化ComBoBx信息
 	InitTabBarInfo(pItemUI);				//初始化TabBar信息	
@@ -127,7 +135,15 @@ void CVisQtWidgetUI::InitItemUIInfo(QWidget * pItemUI)
 	InitCustomUI();
 }
 
-void CVisQtWidgetUI::InitOperBtnSignal(QWidget *pItemUI)
+void FQtWidgetUI::InitUIBaseInfo(QWidget * pItemUI)
+{
+	if (pItemUI == nullptr) return;
+
+	m_nTopHight = pItemUI->property("TitleHeight").toInt();
+	m_bMove = pItemUI->property("MoveFlg").toBool();
+}
+
+void FQtWidgetUI::InitOperBtnSignal(QWidget *pItemUI)
 {
 	if(pItemUI == NULL) return;
 
@@ -135,12 +151,15 @@ void CVisQtWidgetUI::InitOperBtnSignal(QWidget *pItemUI)
 
 	for(int i = 0; i < lOperBtn.size(); i++){
 		if(lOperBtn.at(i) == NULL) continue;
+
+		lOperBtn.at(i)->setDefault(false);
+		lOperBtn.at(i)->setAutoDefault(false);
 		connect(lOperBtn.at(i), SIGNAL(clicked()),
 			this, SLOT(slot_ItemUi_OperBtn_Clicked()));
 	}
 }
 
-void CVisQtWidgetUI::slot_ItemUi_OperBtn_Clicked()
+void FQtWidgetUI::slot_ItemUi_OperBtn_Clicked()
 {
 	if (QPushButton* pBtn = dynamic_cast<QPushButton*>(sender())){
 		QString sToDo = pBtn->property("ToDo").toString();
@@ -148,7 +167,7 @@ void CVisQtWidgetUI::slot_ItemUi_OperBtn_Clicked()
 	}
 }
 
-void CVisQtWidgetUI::InitComboBoxInfo(QWidget *pUI)
+void FQtWidgetUI::InitComboBoxInfo(QWidget *pUI)
 {
 	if(pUI == NULL) return;
 
@@ -181,7 +200,7 @@ void CVisQtWidgetUI::InitComboBoxInfo(QWidget *pUI)
 	}
 }
 
-void CVisQtWidgetUI::InitTabBarInfo(QWidget * pItemUI)
+void FQtWidgetUI::InitTabBarInfo(QWidget * pItemUI)
 {
 	if (pItemUI == NULL) return;
 
@@ -201,7 +220,7 @@ void CVisQtWidgetUI::InitTabBarInfo(QWidget * pItemUI)
 }
 
 //初始化TabWidget信息
-void CVisQtWidgetUI::InitTabWidgetInfo(QWidget * pItemUI)
+void FQtWidgetUI::InitTabWidgetInfo(QWidget * pItemUI)
 {
 	if (pItemUI == NULL) return;
 
@@ -221,7 +240,7 @@ void CVisQtWidgetUI::InitTabWidgetInfo(QWidget * pItemUI)
 }
 
 //初始化QLineEdit
-void CVisQtWidgetUI::InitLineEdit(QWidget * pItemUI)
+void FQtWidgetUI::InitLineEdit(QWidget * pItemUI)
 {
 	if (pItemUI == NULL) return;
 
@@ -240,7 +259,7 @@ void CVisQtWidgetUI::InitLineEdit(QWidget * pItemUI)
 }
 
 //初始化CheckBox
-void CVisQtWidgetUI::InitCheckBox(QWidget * pItemUI)
+void FQtWidgetUI::InitCheckBox(QWidget * pItemUI)
 {
 	if (pItemUI == NULL) return;
 
@@ -255,7 +274,7 @@ void CVisQtWidgetUI::InitCheckBox(QWidget * pItemUI)
 }
 
 //初始化RadioBtn
-void CVisQtWidgetUI::InitRadioButton(QWidget * pItemUI)
+void FQtWidgetUI::InitRadioButton(QWidget * pItemUI)
 {
 	if (pItemUI == NULL) return;
 
@@ -270,7 +289,7 @@ void CVisQtWidgetUI::InitRadioButton(QWidget * pItemUI)
 }
 
 //初始化Slider
-void CVisQtWidgetUI::InitSlider(QWidget * pItemUI)
+void FQtWidgetUI::InitSlider(QWidget * pItemUI)
 {
 	if (pItemUI == NULL) return;
 
@@ -295,7 +314,7 @@ void CVisQtWidgetUI::InitSlider(QWidget * pItemUI)
 }
 
 //初始化DateEdtor
-void CVisQtWidgetUI::InitDateEditor(QWidget * pItemUI)
+void FQtWidgetUI::InitDateEditor(QWidget * pItemUI)
 {
 	if (pItemUI == NULL) return;
 
@@ -309,7 +328,7 @@ void CVisQtWidgetUI::InitDateEditor(QWidget * pItemUI)
 }
 
 //初始化TimeEdtor
-void CVisQtWidgetUI::InitTimeEditor(QWidget * pItemUI)
+void FQtWidgetUI::InitTimeEditor(QWidget * pItemUI)
 {
 	if (pItemUI == NULL) return;
 
@@ -323,7 +342,7 @@ void CVisQtWidgetUI::InitTimeEditor(QWidget * pItemUI)
 }
 
 //初始化DateTimeEdtor
-void CVisQtWidgetUI::InitDateTimeEdtor(QWidget * pItemUI)
+void FQtWidgetUI::InitDateTimeEdtor(QWidget * pItemUI)
 {
 	QList<QDateTimeEdit *> lDateTimeEdtor = pItemUI->findChildren<QDateTimeEdit *>();
 
@@ -335,7 +354,7 @@ void CVisQtWidgetUI::InitDateTimeEdtor(QWidget * pItemUI)
 }
 
 //初始化QDateTimeEdit
-void CVisQtWidgetUI::InitDatetimeEditor(QDateTimeEdit * pEdtor)
+void FQtWidgetUI::InitDatetimeEditor(QDateTimeEdit * pEdtor)
 {
 	if (pEdtor == nullptr) return;
 
@@ -350,7 +369,7 @@ void CVisQtWidgetUI::InitDatetimeEditor(QDateTimeEdit * pEdtor)
 }
 
 //初始化DoubleSpBx
-void CVisQtWidgetUI::InitDoubleSpinBox(QWidget * pItemUI)
+void FQtWidgetUI::InitDoubleSpinBox(QWidget * pItemUI)
 {
 	if (pItemUI == NULL) return;
 
@@ -368,7 +387,7 @@ void CVisQtWidgetUI::InitDoubleSpinBox(QWidget * pItemUI)
 }
 
 //初始化SpinBox
-void CVisQtWidgetUI::InitSpinBox(QWidget * pItemUI)
+void FQtWidgetUI::InitSpinBox(QWidget * pItemUI)
 {
 	if (pItemUI == NULL) return;
 
@@ -386,7 +405,7 @@ void CVisQtWidgetUI::InitSpinBox(QWidget * pItemUI)
 }
 
 //初始化GroupBox
-void CVisQtWidgetUI::InitGroupBox(QWidget * pItemUI)
+void FQtWidgetUI::InitGroupBox(QWidget * pItemUI)
 {
 	if (pItemUI == NULL) return;
 
@@ -402,7 +421,7 @@ void CVisQtWidgetUI::InitGroupBox(QWidget * pItemUI)
 }
 
 //初始化ProgressBar
-void CVisQtWidgetUI::InitProgressBar(QWidget * pItemUI)
+void FQtWidgetUI::InitProgressBar(QWidget * pItemUI)
 {
 	if (pItemUI == NULL) return;
 
@@ -416,7 +435,7 @@ void CVisQtWidgetUI::InitProgressBar(QWidget * pItemUI)
 }
 
 //初始化WebView
-void CVisQtWidgetUI::InitWebView(QWidget * pItemUI)
+void FQtWidgetUI::InitWebView(QWidget * pItemUI)
 {
 	if (pItemUI == NULL) return;
 //
@@ -454,7 +473,7 @@ void CVisQtWidgetUI::InitWebView(QWidget * pItemUI)
 }
 
 //初始化StackedWgt
-void CVisQtWidgetUI::InitStackedWidgt(QWidget * pItemUI)
+void FQtWidgetUI::InitStackedWidgt(QWidget * pItemUI)
 {
 	if (pItemUI == NULL) return;
 
@@ -471,7 +490,7 @@ void CVisQtWidgetUI::InitStackedWidgt(QWidget * pItemUI)
 }
 
 //初始化ScrollArea
-void CVisQtWidgetUI::InitScrollArea(QWidget * pItemUI)
+void FQtWidgetUI::InitScrollArea(QWidget * pItemUI)
 {
 	if (pItemUI == NULL) return;
 
@@ -486,7 +505,7 @@ void CVisQtWidgetUI::InitScrollArea(QWidget * pItemUI)
 }
 
 //初始化CalendarWgt
-void CVisQtWidgetUI::InitCalendarWidget(QWidget * pItemUI)
+void FQtWidgetUI::InitCalendarWidget(QWidget * pItemUI)
 {
 	if (pItemUI == NULL) return;
 
@@ -507,7 +526,7 @@ void CVisQtWidgetUI::InitCalendarWidget(QWidget * pItemUI)
 }
 
 //初始化QTableView信息
-void CVisQtWidgetUI::InitTableViewInfo(QWidget * pItemUI)
+void FQtWidgetUI::InitTableViewInfo(QWidget * pItemUI)
 {
 	if (pItemUI == NULL) return;
 
@@ -521,7 +540,7 @@ void CVisQtWidgetUI::InitTableViewInfo(QWidget * pItemUI)
 }
 
 //初始化QListView
-void CVisQtWidgetUI::InitListViewInfo(QWidget * pItemUI)
+void FQtWidgetUI::InitListViewInfo(QWidget * pItemUI)
 {
 	if (pItemUI == NULL) return;
 
@@ -535,7 +554,7 @@ void CVisQtWidgetUI::InitListViewInfo(QWidget * pItemUI)
 }
 
 //初始化QTreeView
-void CVisQtWidgetUI::InitTreeViewInfo(QWidget * pItemUI)
+void FQtWidgetUI::InitTreeViewInfo(QWidget * pItemUI)
 {
 	if (pItemUI == NULL) return;
 
@@ -553,7 +572,7 @@ void CVisQtWidgetUI::InitTreeViewInfo(QWidget * pItemUI)
 }
 
 //初始化QTableWidget
-void CVisQtWidgetUI::InitTableWidgetInfo(QWidget * pItemUI)
+void FQtWidgetUI::InitTableWidgetInfo(QWidget * pItemUI)
 {
 	if (pItemUI == NULL) return;
 
@@ -580,7 +599,7 @@ void CVisQtWidgetUI::InitTableWidgetInfo(QWidget * pItemUI)
 }
 
 //初始化QListWidget
-void CVisQtWidgetUI::InitListWidgetInfo(QWidget * pItemUI)
+void FQtWidgetUI::InitListWidgetInfo(QWidget * pItemUI)
 {
 	if (pItemUI == NULL) return;
 
@@ -601,7 +620,7 @@ void CVisQtWidgetUI::InitListWidgetInfo(QWidget * pItemUI)
 }
 
 //初始化QTreeWidget
-void CVisQtWidgetUI::InitTreeWidgetInfo(QWidget * pItemUI)
+void FQtWidgetUI::InitTreeWidgetInfo(QWidget * pItemUI)
 {
 	if (pItemUI == NULL) return;
 
@@ -628,7 +647,7 @@ void CVisQtWidgetUI::InitTreeWidgetInfo(QWidget * pItemUI)
 }
 
 //初始化QAbstractItemView
-void CVisQtWidgetUI::InitAbstractItemViewInfo(QAbstractItemView * pView)
+void FQtWidgetUI::InitAbstractItemViewInfo(QAbstractItemView * pView)
 {
 	if (pView == nullptr) return;
 
@@ -649,7 +668,7 @@ void CVisQtWidgetUI::InitAbstractItemViewInfo(QAbstractItemView * pView)
 }
 
 //初始化自定义控件
-void CVisQtWidgetUI::InitCustomUI()
+void FQtWidgetUI::InitCustomUI()
 {
 	for (int i = 0; i < m_lCustomUI.size(); i++) {
 		QString sCustomUI = m_lCustomUI.at(i);
@@ -666,7 +685,7 @@ void CVisQtWidgetUI::InitCustomUI()
 	}
 }
 
-void CVisQtWidgetUI::SetCustomUI(QWidget * pItmeUI, const QString & sObjName)
+void FQtWidgetUI::SetCustomUI(QWidget * pItmeUI, const QString & sObjName)
 {
 	if (pItmeUI == nullptr || sObjName.isEmpty()) return;
 	if (m_pUI == nullptr) return;
@@ -684,18 +703,80 @@ void CVisQtWidgetUI::SetCustomUI(QWidget * pItmeUI, const QString & sObjName)
 	pCustomUI->setLayout(pCustomUILyt);
 }
 
-void CVisQtWidgetUI::BindBusiness(QObject *pObj)
+void FQtWidgetUI::mousePressEvent(QMouseEvent * event)
+{
+	if (!m_bMove) {
+		return QWidget::mousePressEvent(event);
+	}
+
+	QPoint pos = event->pos();
+	if (event->button() == Qt::LeftButton) {
+		if (m_nTopHight >= pos.ry()) {
+			m_bCurFrameMoveState = true;
+		}
+
+		m_CurrentPos = event->globalPos() - frameGeometry().topLeft();
+		event->accept();
+	}
+
+	QWidget::mousePressEvent(event);
+}
+
+void FQtWidgetUI::mouseMoveEvent(QMouseEvent * event)
+{
+	if (!m_bMove) {
+		return QWidget::mouseMoveEvent(event);
+	}
+
+	QPoint pos = event->pos();
+	if (event->buttons() && Qt::LeftButton)
+	{
+		if (m_bCurFrameMoveState && !m_bCurFrameType)
+		{
+			move(event->globalPos() - m_CurrentPos);
+			event->accept();
+		}
+	}
+
+	QWidget::mouseMoveEvent(event);
+}
+
+void FQtWidgetUI::mouseReleaseEvent(QMouseEvent * event)
+{
+	if (!m_bMove) {
+		return QWidget::mouseReleaseEvent(event);
+	}
+
+	m_bCurFrameMoveState = false;
+	QPoint pos = event->pos();
+	QPoint CurPos = this->pos();
+	int nTop = CurPos.ry();
+	int nLeft = CurPos.rx();
+	bool bMove = false;
+	if (CurPos.ry() < 0) {
+		bMove = true;
+		nTop = 0;
+	}
+
+	if (bMove) {
+		move(nLeft, nTop);
+	}
+
+	QWidget::mouseReleaseEvent(event);
+}
+
+void FQtWidgetUI::BindBusiness(QObject *pObj)
 {
 	m_pBusObj = pObj;
 }
 
-QObject * CVisQtWidgetUI::GetBindBusiness()
+QObject * FQtWidgetUI::GetBindBusiness()
 {
 	return m_pBusObj;
 }
 
 //获取PushButton
-QPushButton * CVisQtWidgetUI::GetPushButton(const QString &sObjName)
+QPushButton * FQtWidgetUI::GetPushButton(const QString &sObjName)
 {
 	if (m_pUI == nullptr) return nullptr;
 
@@ -706,7 +787,7 @@ QPushButton * CVisQtWidgetUI::GetPushButton(const QString &sObjName)
 }
 
 //获取当前ComboBox显示信息
-QString CVisQtWidgetUI::GetComboBoxCurShowText(const QString &sName)
+QString FQtWidgetUI::GetComboBoxCurShowText(const QString &sName)
 {
 	QString sReustInfo = QString();
 
@@ -721,7 +802,7 @@ QString CVisQtWidgetUI::GetComboBoxCurShowText(const QString &sName)
 }
 
 //获取ComBoBox
-QComboBox * CVisQtWidgetUI::GetComboBox(const QString & sObjName)
+QComboBox * FQtWidgetUI::GetComboBox(const QString & sObjName)
 {
 	if (m_pUI == nullptr) return nullptr;
 
@@ -731,7 +812,7 @@ QComboBox * CVisQtWidgetUI::GetComboBox(const QString & sObjName)
 	return pComboBox;
 }
 
-QString CVisQtWidgetUI::GetCurrComboBoxInfo(const QString &sName)
+QString FQtWidgetUI::GetCurrComboBoxInfo(const QString &sName)
 {
 	QString sReustInfo = QString();
 
@@ -746,7 +827,7 @@ QString CVisQtWidgetUI::GetCurrComboBoxInfo(const QString &sName)
 }
 
 //获取当前ComboBoxIndex
-int CVisQtWidgetUI::GetComboBoxCurIndex(const QString &sName)
+int FQtWidgetUI::GetComboBoxCurIndex(const QString &sName)
 {
 	int nIndex = -1;
 
@@ -761,7 +842,7 @@ int CVisQtWidgetUI::GetComboBoxCurIndex(const QString &sName)
 }
 
 //获取LineEdit
-QLineEdit * CVisQtWidgetUI::GetLineEdit(const QString & sObjName)
+QLineEdit * FQtWidgetUI::GetLineEdit(const QString & sObjName)
 {
 	if (m_pUI == nullptr) return nullptr;
 
@@ -771,7 +852,7 @@ QLineEdit * CVisQtWidgetUI::GetLineEdit(const QString & sObjName)
 	return pLineEdit;
 }
 
-QString CVisQtWidgetUI::GetLineEditInfo(const QString &sName)
+QString FQtWidgetUI::GetLineEditInfo(const QString &sName)
 {
 	QString sReustInfo = QString();
 
@@ -785,7 +866,7 @@ QString CVisQtWidgetUI::GetLineEditInfo(const QString &sName)
 	return sReustInfo;
 }
 
-void CVisQtWidgetUI::SetLineEditInfo(const QString &sName, const QString &sInfo)
+void FQtWidgetUI::SetLineEditInfo(const QString &sName, const QString &sInfo)
 {
 	if(m_pUI == nullptr) return ;
 
@@ -796,7 +877,7 @@ void CVisQtWidgetUI::SetLineEditInfo(const QString &sName, const QString &sInfo)
 }
 
 //获取TextBrowser
-QTextEdit * CVisQtWidgetUI::GetTextBrowser(const QString & sObjName)
+QTextEdit * FQtWidgetUI::GetTextBrowser(const QString & sObjName)
 {
 	if (m_pUI == nullptr) return nullptr;
 
@@ -807,7 +888,7 @@ QTextEdit * CVisQtWidgetUI::GetTextBrowser(const QString & sObjName)
 }
 
 //获取TextBrowserInfo
-QString CVisQtWidgetUI::GetTextBrowserInfo(const QString &sName)
+QString FQtWidgetUI::GetTextBrowserInfo(const QString &sName)
 {
 	QString sReustInfo = QString();
 
@@ -822,7 +903,7 @@ QString CVisQtWidgetUI::GetTextBrowserInfo(const QString &sName)
 }
 
 //设置TextBrowserInfo
-void CVisQtWidgetUI::SetTextBrowserInfo(const QString &sName, const QString &sInfo)
+void FQtWidgetUI::SetTextBrowserInfo(const QString &sName, const QString &sInfo)
 {
 	if(m_pUI == nullptr) return;
 
@@ -833,7 +914,7 @@ void CVisQtWidgetUI::SetTextBrowserInfo(const QString &sName, const QString &sIn
 }
 
 //获取CheckBox
-QCheckBox * CVisQtWidgetUI::GetCheckBox(const QString & sObjName)
+QCheckBox * FQtWidgetUI::GetCheckBox(const QString & sObjName)
 {
 	if (m_pUI == nullptr) return nullptr;
 
@@ -844,7 +925,7 @@ QCheckBox * CVisQtWidgetUI::GetCheckBox(const QString & sObjName)
 }
 
 //获取CheckBox状态
-bool CVisQtWidgetUI::GetCheckBoxCheckStatus(const QString &sName)
+bool FQtWidgetUI::GetCheckBoxCheckStatus(const QString &sName)
 {
 	bool bCheckFlg = false;
 
@@ -859,7 +940,7 @@ bool CVisQtWidgetUI::GetCheckBoxCheckStatus(const QString &sName)
 }
 
 //获取Label
-QLabel * CVisQtWidgetUI::GetLable(const QString & sObjName)
+QLabel * FQtWidgetUI::GetLable(const QString & sObjName)
 {
 	if (m_pUI == nullptr) return nullptr;
 
@@ -870,7 +951,7 @@ QLabel * CVisQtWidgetUI::GetLable(const QString & sObjName)
 }
 
 //设置Label信息
-void CVisQtWidgetUI::SetLableInfo(const QString &sName, const QString &sInfo)
+void FQtWidgetUI::SetLableInfo(const QString &sName, const QString &sInfo)
 {
 	if(m_pUI == nullptr) return;
 
@@ -881,7 +962,7 @@ void CVisQtWidgetUI::SetLableInfo(const QString &sName, const QString &sInfo)
 }
 
 //设置Label图像信息
-void CVisQtWidgetUI::SetLabelImgInfo(const QString &sName, const QString &sImgInfo)
+void FQtWidgetUI::SetLabelImgInfo(const QString &sName, const QString &sImgInfo)
 {
 	if(sImgInfo.isEmpty()) return;
 	if(m_pUI == nullptr) return;
@@ -896,7 +977,7 @@ void CVisQtWidgetUI::SetLabelImgInfo(const QString &sName, const QString &sImgIn
 }
 
 //获取TabBar(相对于主窗口)
-QTabBar * CVisQtWidgetUI::GetTabBar(const QString & sObjName)
+QTabBar * FQtWidgetUI::GetTabBar(const QString & sObjName)
 {
 	QTabBar *pTabBar = nullptr;
 
@@ -909,7 +990,7 @@ QTabBar * CVisQtWidgetUI::GetTabBar(const QString & sObjName)
 }
 
 //获取TabWidget的TabBar
-QTabBar * CVisQtWidgetUI::GetTabWidgetTabBar(const QString & sObjName)
+QTabBar * FQtWidgetUI::GetTabWidgetTabBar(const QString & sObjName)
 {
 	QTabBar *pTabBar = nullptr;
 
@@ -924,7 +1005,7 @@ QTabBar * CVisQtWidgetUI::GetTabWidgetTabBar(const QString & sObjName)
 }
 
 //获取TabWidget
-QTabWidget * CVisQtWidgetUI::GetTabWidgetUI(const QString & sObjName)
+QTabWidget * FQtWidgetUI::GetTabWidgetUI(const QString & sObjName)
 {
 	if (m_pUI == nullptr) return nullptr;
 
@@ -935,7 +1016,7 @@ QTabWidget * CVisQtWidgetUI::GetTabWidgetUI(const QString & sObjName)
 }
 
 //获取QListView
-QListView * CVisQtWidgetUI::GetListView(const QString & sObjName)
+QListView * FQtWidgetUI::GetListView(const QString & sObjName)
 {
 	if (m_pUI == nullptr) return nullptr;
 
@@ -946,7 +1027,7 @@ QListView * CVisQtWidgetUI::GetListView(const QString & sObjName)
 }
 
 //获取QTableView
-QTableView * CVisQtWidgetUI::GetTblView(const QString & sObjName)
+QTableView * FQtWidgetUI::GetTblView(const QString & sObjName)
 {
 	if (m_pUI == nullptr) return nullptr;
 
@@ -957,7 +1038,7 @@ QTableView * CVisQtWidgetUI::GetTblView(const QString & sObjName)
 }
 
 //获取QTreeView
-QTreeView * CVisQtWidgetUI::GetTreeView(const QString & sObjName)
+QTreeView * FQtWidgetUI::GetTreeView(const QString & sObjName)
 {
 	if (m_pUI == nullptr) return nullptr;
 
@@ -968,7 +1049,7 @@ QTreeView * CVisQtWidgetUI::GetTreeView(const QString & sObjName)
 }
 
 //获取QListWidget
-QListWidget * CVisQtWidgetUI::GetListWidget(const QString & sObjName)
+QListWidget * FQtWidgetUI::GetListWidget(const QString & sObjName)
 {
 	if (m_pUI == nullptr) return nullptr;
 
@@ -979,7 +1060,7 @@ QListWidget * CVisQtWidgetUI::GetListWidget(const QString & sObjName)
 }
 
 //获取QTableWidget
-QTableWidget * CVisQtWidgetUI::GetTblWidget(const QString & sObjName)
+QTableWidget * FQtWidgetUI::GetTblWidget(const QString & sObjName)
 {
 	if (m_pUI == nullptr) return nullptr;
 
@@ -990,7 +1071,7 @@ QTableWidget * CVisQtWidgetUI::GetTblWidget(const QString & sObjName)
 }
 
 //获取QTreeWidget
-QTreeWidget * CVisQtWidgetUI::GetTreeWidget(const QString & sObjName)
+QTreeWidget * FQtWidgetUI::GetTreeWidget(const QString & sObjName)
 {
 	if (m_pUI == nullptr) return nullptr;
 
@@ -1001,7 +1082,7 @@ QTreeWidget * CVisQtWidgetUI::GetTreeWidget(const QString & sObjName)
 }
 
 //获取QSlider
-QSlider * CVisQtWidgetUI::GetSlider(const QString & sObjName)
+QSlider * FQtWidgetUI::GetSlider(const QString & sObjName)
 {
 	if (m_pUI == nullptr) return nullptr;
 
@@ -1012,7 +1093,7 @@ QSlider * CVisQtWidgetUI::GetSlider(const QString & sObjName)
 }
 
 //获取QDateEdit
-QDateEdit * CVisQtWidgetUI::GetDateEditor(const QString & sObjName)
+QDateEdit * FQtWidgetUI::GetDateEditor(const QString & sObjName)
 {
 	if (m_pUI == nullptr) return nullptr;
 
@@ -1023,7 +1104,7 @@ QDateEdit * CVisQtWidgetUI::GetDateEditor(const QString & sObjName)
 }
 
 //获取QTimeEdit
-QTimeEdit * CVisQtWidgetUI::GetTimeEditor(const QString & sObjName)
+QTimeEdit * FQtWidgetUI::GetTimeEditor(const QString & sObjName)
 {
 	if (m_pUI == nullptr) return nullptr;
 
@@ -1034,7 +1115,7 @@ QTimeEdit * CVisQtWidgetUI::GetTimeEditor(const QString & sObjName)
 }
 
 //获取QDateTimeEdit
-QDateTimeEdit * CVisQtWidgetUI::GetDateTimeEditor(const QString & sObjName)
+QDateTimeEdit * FQtWidgetUI::GetDateTimeEditor(const QString & sObjName)
 {
 	if (m_pUI == nullptr) return nullptr;
 
@@ -1045,7 +1126,7 @@ QDateTimeEdit * CVisQtWidgetUI::GetDateTimeEditor(const QString & sObjName)
 }
 
 //获取QSpinBox
-QSpinBox * CVisQtWidgetUI::GetSpinBox(const QString & sObjName)
+QSpinBox * FQtWidgetUI::GetSpinBox(const QString & sObjName)
 {
 	if (m_pUI == nullptr) return nullptr;
 
@@ -1056,7 +1137,7 @@ QSpinBox * CVisQtWidgetUI::GetSpinBox(const QString & sObjName)
 }
 
 //获取QDoubleSpinBox
-QDoubleSpinBox * CVisQtWidgetUI::GetDoubleSpinBox(const QString & sObjName)
+QDoubleSpinBox * FQtWidgetUI::GetDoubleSpinBox(const QString & sObjName)
 {
 	if (m_pUI == nullptr) return nullptr;
 
@@ -1067,7 +1148,7 @@ QDoubleSpinBox * CVisQtWidgetUI::GetDoubleSpinBox(const QString & sObjName)
 }
 
 //获取QGroupBox
-QGroupBox * CVisQtWidgetUI::GetGroupBox(const QString & sObjName)
+QGroupBox * FQtWidgetUI::GetGroupBox(const QString & sObjName)
 {
 	if (m_pUI == nullptr) return nullptr;
 
@@ -1078,7 +1159,7 @@ QGroupBox * CVisQtWidgetUI::GetGroupBox(const QString & sObjName)
 }
 
 //获取QProgressBar
-QProgressBar * CVisQtWidgetUI::GetProgressBar(const QString & sObjName)
+QProgressBar * FQtWidgetUI::GetProgressBar(const QString & sObjName)
 {
 	if (m_pUI == nullptr) return nullptr;
 
@@ -1089,7 +1170,7 @@ QProgressBar * CVisQtWidgetUI::GetProgressBar(const QString & sObjName)
 }
 
 //获取QStackedWidget
-QStackedWidget * CVisQtWidgetUI::GetStackedWgt(const QString & sObjName)
+QStackedWidget * FQtWidgetUI::GetStackedWgt(const QString & sObjName)
 {
 	if (m_pUI == nullptr) return nullptr;
 
@@ -1100,7 +1181,7 @@ QStackedWidget * CVisQtWidgetUI::GetStackedWgt(const QString & sObjName)
 }
 
 //获取QCalendarWidget
-QCalendarWidget * CVisQtWidgetUI::GetCalendarWidget(const QString & sObjName)
+QCalendarWidget * FQtWidgetUI::GetCalendarWidget(const QString & sObjName)
 {
 	if (m_pUI == nullptr) return nullptr;
 
@@ -1109,4 +1190,27 @@ QCalendarWidget * CVisQtWidgetUI::GetCalendarWidget(const QString & sObjName)
 
 	return pEdtor;
 }
+
+//设置窗口移动相关信息
+void FQtWidgetUI::SetWindMoveFlg(bool bMoveFlg)
+{
+	m_bMove = bMoveFlg;
+}
+
+bool FQtWidgetUI::GetWindMoveFlg()
+{
+	return m_bMove;
+}
+
+void FQtWidgetUI::SetWindTitleHeight(int nHeight)
+{
+	m_nTopHight = nHeight;
+
+}
+
+int FQtWidgetUI::GetWindTitleHeight()
+{
+	return 0;
+}
+
 

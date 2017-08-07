@@ -1,10 +1,10 @@
 /************************************************************************/
 /*                        使用Qt布局创建QWidget	                        */
 /************************************************************************/
-#ifndef CVISQTWIDGETUI_H
-#define CVISQTWIDGETUI_H
+#ifndef FQtWidgetUI_H
+#define FQtWidgetUI_H
 
-#include "vispubliccontrolsui_global.h"
+#include "fqtuitool_global.h"
 #include <QWidget>
 
 class QTabBar;
@@ -41,14 +41,15 @@ class QGroupBox;
 class QProgressBar;
 class QStackedWidget;
 class QCalendarWidget;
+class QMouseEvent;
 
-class VISPUBLICCONTROLSUI_EXPORT CVisQtWidgetUI : public QWidget
+class FQTUITOOL_EXPORT FQtWidgetUI : public QWidget
 {
 	Q_OBJECT
 
 public:
-	CVisQtWidgetUI(QWidget *parent = nullptr);
-	~CVisQtWidgetUI();
+	FQtWidgetUI(QWidget *parent = nullptr);
+	~FQtWidgetUI();
 
 	bool InitPolicyFileUI(const QString &sUIFile);	//初始化界面UI
 	bool InitUIForFullPath(const QString &sUIFile);	//初始化界面UI
@@ -108,6 +109,12 @@ public:
 	QStackedWidget*	GetStackedWgt(const QString &sObjName);			//获取QStackedWidget
 	
 	QCalendarWidget*	GetCalendarWidget(const QString &sObjName);	//获取QCalendarWidget
+
+	//设置窗口移动相关信息
+	void SetWindMoveFlg(bool bMoveFlg);
+	bool GetWindMoveFlg();
+	void SetWindTitleHeight(int nHeight);
+	int  GetWindTitleHeight();
 
 signals:
 	void signal_OperBtn_ToDo(const QString &sToDo);
@@ -199,6 +206,7 @@ private slots:
 private:
 	//初始化ItemUI基础控件
 	void InitItemUIInfo(QWidget	*pItemUI);
+	void InitUIBaseInfo(QWidget *pItemUI);
 	void InitOperBtnSignal(QWidget *pItemUI);			//初始化Btn
 	void InitComboBoxInfo(QWidget *pUI);				//初始化ComBoBx信息
 	void InitTabBarInfo(QWidget *pItemUI);				//初始化TabBar信息	
@@ -232,11 +240,23 @@ private:
 	void InitCustomUI();								//初始化自定义控件
 	void SetCustomUI(QWidget *pItmeUI, const QString &sObjName);
 
+protected:
+	void mousePressEvent(QMouseEvent *event);
+	void mouseMoveEvent(QMouseEvent *event);
+	void mouseReleaseEvent(QMouseEvent *event);
+
 private:
 	QWidget				*m_pUI;
 	QObject				*m_pBusObj;	
 
 	QStringList			m_lCustomUI;
+
+	bool				m_bCurFrameType;
+	bool				m_bMove;					
+	bool				m_bCurFrameMoveState;		
+	int					m_nTopHight;				
+	QPoint				m_CurrentPos;			
+
 };
 
-#endif // CVISQTWIDGETUI_H
+#endif // FQtWidgetUI_H

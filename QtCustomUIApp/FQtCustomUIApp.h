@@ -20,6 +20,7 @@ private slots:
 
 private:
 	void InitSignalSlots();
+	void InitUI();
 
 private:
 	Ui::FQtCustomUIAppClass ui;

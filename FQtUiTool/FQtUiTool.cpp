@@ -1,4 +1,4 @@
-#include "VisQtUiTool.h"
+#include "FQtUiTool.h"
 
 #include <QWidget>
 #include <QString>
@@ -8,17 +8,17 @@
 
 #include "FUILoader.h"
 
-VisQtUiTool::VisQtUiTool()
+FQtUiTool::FQtUiTool()
 {
 
 }
 
-VisQtUiTool::~VisQtUiTool()
+FQtUiTool::~FQtUiTool()
 {
 
 }
 
-QWidget * VisQtUiTool::CreateUI(const QString &sFileName, QStringList &lCustomUI, QWidget *parent /*= 0*/)
+QWidget * FQtUiTool::CreateUI(const QString &sFileName, QStringList &lCustomUI, QWidget *parent /*= 0*/)
 {
 	if(sFileName.isEmpty()) return NULL;
 
@@ -37,7 +37,7 @@ QWidget * VisQtUiTool::CreateUI(const QString &sFileName, QStringList &lCustomUI
 	return pWdgtUI;
 }
 
-QWidget * VisQtUiTool::CreateUIForPath(const QString &sFileName, QStringList &lCustomUI, QWidget *parent /*= 0*/)
+QWidget * FQtUiTool::CreateUIForPath(const QString &sFileName, QStringList &lCustomUI, QWidget *parent /*= 0*/)
 {
 	if(sFileName.isEmpty()) return NULL;
 

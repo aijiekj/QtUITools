@@ -1,19 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.0 VisBaseFrame", "1.0 VisBaseFrame", "{55BDDEE1-FE70-4892-8DD6-3C170E436301}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2.0 VisPatrolUIFrame", "2.0 VisPatrolUIFrame", "{A5905EE3-04E5-450A-BF5F-1ACC689BDDEC}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.0 UI App", "3.0 UI App", "{6B29C94B-03A4-4C8F-8119-FEA9C12C26AB}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VisQtUiTool", "VisQtUiTool\VisQtUiTool.vcxproj", "{47267DBF-F308-4FB1-B1C6-46C6D2C6BC8B}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VisPublicControlsUI", "VisPublicControlsUI\VisPublicControlsUI.vcxproj", "{4A240D68-B7C3-4E57-9DA9-7131AECBB716}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QtCustomUIApp", "QtCustomUIApp\QtCustomUIApp.vcxproj", "{B05DA1CC-0F23-4702-9FE6-8A32BCD39DFF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.0 Base UI Tools", "1.0 Base UI Tools", "{84B05583-A997-4619-8B97-211BB6D4A8EF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FQtUiTool", "FQtUiTool\FQtUiTool.vcxproj", "{5A66FD70-6A5D-47DB-B4AD-E2030313862F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,28 +17,23 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{47267DBF-F308-4FB1-B1C6-46C6D2C6BC8B}.Debug|x86.ActiveCfg = Debug|Win32
-		{47267DBF-F308-4FB1-B1C6-46C6D2C6BC8B}.Debug|x86.Build.0 = Debug|Win32
-		{47267DBF-F308-4FB1-B1C6-46C6D2C6BC8B}.Release|x86.ActiveCfg = Release|Win32
-		{47267DBF-F308-4FB1-B1C6-46C6D2C6BC8B}.Release|x86.Build.0 = Release|Win32
-		{4A240D68-B7C3-4E57-9DA9-7131AECBB716}.Debug|x86.ActiveCfg = Debug|Win32
-		{4A240D68-B7C3-4E57-9DA9-7131AECBB716}.Debug|x86.Build.0 = Debug|Win32
-		{4A240D68-B7C3-4E57-9DA9-7131AECBB716}.Release|x86.ActiveCfg = Release|Win32
-		{4A240D68-B7C3-4E57-9DA9-7131AECBB716}.Release|x86.Build.0 = Release|Win32
 		{B05DA1CC-0F23-4702-9FE6-8A32BCD39DFF}.Debug|x86.ActiveCfg = Debug|Win32
 		{B05DA1CC-0F23-4702-9FE6-8A32BCD39DFF}.Debug|x86.Build.0 = Debug|Win32
 		{B05DA1CC-0F23-4702-9FE6-8A32BCD39DFF}.Release|x86.ActiveCfg = Release|Win32
 		{B05DA1CC-0F23-4702-9FE6-8A32BCD39DFF}.Release|x86.Build.0 = Release|Win32
+		{5A66FD70-6A5D-47DB-B4AD-E2030313862F}.Debug|x86.ActiveCfg = Debug|Win32
+		{5A66FD70-6A5D-47DB-B4AD-E2030313862F}.Debug|x86.Build.0 = Debug|Win32
+		{5A66FD70-6A5D-47DB-B4AD-E2030313862F}.Release|x86.ActiveCfg = Release|Win32
+		{5A66FD70-6A5D-47DB-B4AD-E2030313862F}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{47267DBF-F308-4FB1-B1C6-46C6D2C6BC8B} = {55BDDEE1-FE70-4892-8DD6-3C170E436301}
-		{4A240D68-B7C3-4E57-9DA9-7131AECBB716} = {A5905EE3-04E5-450A-BF5F-1ACC689BDDEC}
 		{B05DA1CC-0F23-4702-9FE6-8A32BCD39DFF} = {6B29C94B-03A4-4C8F-8119-FEA9C12C26AB}
+		{5A66FD70-6A5D-47DB-B4AD-E2030313862F} = {84B05583-A997-4619-8B97-211BB6D4A8EF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		Qt5Version = msvc2015
+		Qt5Version = msvc2015-5.7
 	EndGlobalSection
 EndGlobal

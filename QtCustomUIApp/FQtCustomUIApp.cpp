@@ -1,8 +1,8 @@
 #include "FQtCustomUIApp.h"
 #include <QFileDialog>
-#include "CVisQtWidgetUI.h"
-#include "CVisQtDialogUI.h"
-#include "VisQtUiTool.h"
+#include "FQtWidgetUI.h"
+#include "FQtDialogUI.h"
+#include "FQtUiTool.h"
 
 
 FQtCustomUIApp::FQtCustomUIApp(QWidget *parent)
@@ -11,6 +11,7 @@ FQtCustomUIApp::FQtCustomUIApp(QWidget *parent)
 	m_pCurPreViewUI = nullptr;
 	ui.setupUi(this);
 
+	InitUI();
 	InitSignalSlots();
 }
 
@@ -29,6 +30,11 @@ void FQtCustomUIApp::InitSignalSlots()
 		this, SLOT(slot_QtWidgetAct_Clicked()));
 	connect(ui.actionQt_Dialog, SIGNAL(triggered()),
 		this, SLOT(slot_QtDialogAct_Clicked()));
+}
+
+void FQtCustomUIApp::InitUI()
+{
+
 }
 
 void FQtCustomUIApp::slot_OpenFileAct_Clicked()
@@ -51,20 +57,20 @@ void FQtCustomUIApp::slot_OpenFileAct_Clicked()
 void FQtCustomUIApp::slot_PreViewAct_Clicked()
 {
 	if(m_sCurOpenFile.isEmpty()) return;
-	m_pCurPreViewUI = VisQtUiTool::CreateUIForPath(m_sCurOpenFile);
+	m_pCurPreViewUI = FQtUiTool::CreateUIForPath(m_sCurOpenFile);
 
 	if(m_pCurPreViewUI != nullptr){
 
 		m_pCurPreViewUI->setAttribute(Qt::WA_DeleteOnClose, true);
 		m_pCurPreViewUI->show();
-	}	
+	}
 }
 
 void FQtCustomUIApp::slot_QtWidgetAct_Clicked()
 {
 	if(m_sCurOpenFile.isEmpty()) return;
 
-	CVisQtWidgetUI *pCustomWidgetUI = new CVisQtWidgetUI;
+	FQtWidgetUI *pCustomWidgetUI = new FQtWidgetUI;
 	if(pCustomWidgetUI == nullptr) return;
 
 	if(pCustomWidgetUI->InitUIForFullPath(m_sCurOpenFile)){
@@ -77,15 +83,14 @@ void FQtCustomUIApp::slot_QtDialogAct_Clicked()
 {
 	if(m_sCurOpenFile.isEmpty()) return;
 
-	//CVisQtDialogUI *pCustomDialogUI = new CVisQtDialogUI;
-	//if(pCustomDialogUI == nullptr) return;
+	FQtDialogUI *pCustomDialogUI = new FQtDialogUI;
+	if(pCustomDialogUI == nullptr) return;
 
-	//if(pCustomDialogUI->InitUIForFullPath(m_sCurOpenFile)){
-	//	if(pCustomDialogUI->exec() == QDialog::Accepted){
+	if(pCustomDialogUI->InitUIForFullPath(m_sCurOpenFile)){
+		pCustomDialogUI->setAttribute(Qt::WA_DeleteOnClose, true);
 
-	//	}
+		if(pCustomDialogUI->exec() == QDialog::Accepted){
 
-	//	delete pCustomDialogUI;
-	//	pCustomDialogUI = nullptr;
-	//}
+		}
+	}
 }

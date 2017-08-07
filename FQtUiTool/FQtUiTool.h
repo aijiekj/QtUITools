@@ -1,17 +1,17 @@
-#ifndef VISQTUITOOL_H
-#define VISQTUITOOL_H
+#ifndef FQtUiTool_H
+#define FQtUiTool_H
 
-#include "visqtuitool_global.h"
+#include "fqtuitool_global.h"
 #include <QStringList>
 
 class QWidget;
 class QString;
 
-class VISQTUITOOL_EXPORT VisQtUiTool
+class FQTUITOOL_EXPORT FQtUiTool
 {
 public:
-	VisQtUiTool();
-	~VisQtUiTool();
+	FQtUiTool();
+	~FQtUiTool();
 
 	static QWidget * CreateUI(const QString &sFileName, QStringList &lCustomUI = QStringList(), QWidget *parent = 0);
 	static QWidget * CreateUIForPath(const QString &sFileName, QStringList &lCustomUI = QStringList(), QWidget *parent = 0);
@@ -20,4 +20,4 @@ private:
 
 };
 
-#endif // VISQTUITOOL_H
+#endif // FQtUiTool_H
